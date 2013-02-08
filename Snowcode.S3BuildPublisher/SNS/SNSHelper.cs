@@ -22,9 +22,20 @@ namespace Snowcode.S3BuildPublisher.SNS
             Client = AWSClientFactory.CreateAmazonSNSClient(awsAccessKeyId, awsSecretAccessKey);
         }
 
-        public SNSHelper(AwsClientDetails clientDetails)
+        public SNSHelper(AwsClientDetails clientDetails, String serviceUrl = null)
         {
-            Client = AWSClientFactory.CreateAmazonSNSClient(clientDetails.AwsAccessKeyId, clientDetails.AwsSecretAccessKey);
+            if (string.IsNullOrEmpty(serviceUrl))
+            {
+                Client = AWSClientFactory.CreateAmazonSNSClient(clientDetails.AwsAccessKeyId,
+                                                                clientDetails.AwsSecretAccessKey);
+            }
+            else
+            {
+                AmazonSimpleNotificationServiceConfig asnsConfig = new AmazonSimpleNotificationServiceConfig();
+                asnsConfig.ServiceURL = serviceUrl;
+                Client = AWSClientFactory.CreateAmazonSNSClient(clientDetails.AwsAccessKeyId,
+                                                                clientDetails.AwsSecretAccessKey, asnsConfig);                
+            }
         }
 
         public SNSHelper(AmazonSimpleNotificationService amazonSNSClient)

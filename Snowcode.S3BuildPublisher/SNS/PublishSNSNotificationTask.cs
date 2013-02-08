@@ -11,6 +11,8 @@ namespace Snowcode.S3BuildPublisher.SNS
     {
         #region Properties
 
+        public string ServiceUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the TopicArn
         /// </summary>
@@ -58,7 +60,7 @@ namespace Snowcode.S3BuildPublisher.SNS
 
         private void PublishNotifiation(AwsClientDetails clientDetails)
         {
-            using (var helper = new SNSHelper(clientDetails))
+            using (var helper = new SNSHelper(clientDetails, ServiceUrl))
             {
                 MessageId = helper.Publish(TopicArn, Subject, Message);
                 Log.LogMessage(MessageImportance.Normal, "Published SNS Notification {0}", Subject);
